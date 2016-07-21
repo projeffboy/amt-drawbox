@@ -235,6 +235,34 @@
         });
     }
     initDraw();
+	
+	// Get URL parameters
+	// http://www.cnblogs.com/shengxiang/archive/2011/09/19/2181629.html
+	function GetURLParam(name)
+	{
+		var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+		var r = window.location.search.substr(1).match(reg);
+		if (r!=null) return unescape(r[2]);
+		return null;
+	}
+	
+	// Post data to AMT server
+	// http://www.jb51.net/article/75819.htm
+	function postData(url,params){
+		var temp=document.createElement("form");
+		temp.action=url;
+		temp.method="post";
+		temp.style.display="none";
+		for(var x in params){
+			var opt=document.createElement("textarea");
+			opt.name=x;
+			opt.value=params[x];
+			temp.appendChild(opt);
+		}
+		document.body.appendChild(temp);
+		temp.submit();
+		return temp;
+	}
 
     /*
      * Submit, undo, cancel
@@ -242,38 +270,83 @@
 
     function btnFunc() {
         submit.onclick = function() {
-            function convert(val, prop) {
-                if ((val + '').match(/px/)) {
-                    val = +(val.slice(0, val.length - 2));
-                }
-                return Math.round(val * tempImg[prop] / image.children[0][prop]);
-            }
-            if (image.children.length > 1) {
-                if ($(magnifyIcon).hasClass('magnifyIcon') === true) {
-                    destroy();
-                }
-                var tempImg = new Image();
-                tempImg.src = g.imgVal;
-                console.log(
-                    'Image Dimensions\n' +
-                    'Native Width: ' + tempImg.width + 'px\n' +
-                    'Native Height: ' + tempImg.height + 'px'
-                );
-                for (i = 1, length = image.children.length; i < length; i++) {
-                    var imageRect = image.children[0].getBoundingClientRect();
-                    var boxRect = image.children[i].getBoundingClientRect();
-                    var x = Math.abs(boxRect.left - imageRect.left);
-                    var y = Math.abs(boxRect.top - imageRect.top);
-                    console.log(
-                        'Box ' + i + ' Dimensions\n' +
-                        'Width: ' + convert(image.children[i].style.width, 'width') + '\n' +
-                        'Height: ' + convert(image.children[i].style.height, 'height') + '\n' +
-                        'Relative Position: (' + convert(x, 'width') + 'px, ' + convert(y, 'height') + 'px)'
-                    );
-                }
-                changeSource();
-                cancel.click();
-            }
+            
+			// Transfer data to websocket server and tell AMT server that the HIT is done
+			var websocket=null;
+			if('WebSocket' in window){
+				websocket=new WebSocket("wss://127.0.0.1:8443/websocket_server/mark");
+			}else{
+				alert("Your browser does not support websocket!");
+			}
+			
+			//Called on error
+			websocket.onerror=function(){
+				alert("Something went wrong...");
+			}
+			
+			//Called when connection established
+			websocket.onopen=function(){
+				var tempImg = new Image();
+				tempImg.src = g.imgVal;
+				function convert(val, prop) {
+					if ((val + '').match(/px/)) {
+						val = +(val.slice(0, val.length - 2));
+					}
+					return Math.round(val * tempImg[prop] / image.children[0][prop]);
+				}
+				if (image.children.length > 1) {
+					//Encode data into JSON object
+					var jsonObj={
+						nwidth:tempImg.width,
+						nheight:tempImg.height,
+						rects:[]
+					}
+					for (i = 1; i < image.children.length; i++) {
+						var imageRect = image.children[0].getBoundingClientRect();
+						var boxRect = image.children[i].getBoundingClientRect();
+						var x = Math.abs(boxRect.left - imageRect.left);
+						var y = Math.abs(boxRect.top - imageRect.top);
+						var temp={
+							num:i,
+							width:convert(image.children[i].style.width, 'width'),
+							height:convert(image.children[i].style.height, 'height'),
+							x:convert(x, 'width'),
+							y:convert(y, 'height')
+						};
+						jsonObj.rects.push(temp);
+					}
+					websocket.send(JSON.stringify(jsonObj));
+				}
+				websocket.close();
+				
+				//Submit answer to AMT server
+				// alert("assignmentId:"+GetURLParam("assignmentId")+"\n"
+					 // +"hitId"+GetURLParam("hitId")+"\n"
+					 // +"workerId"+GetURLParam("workerId")+"\n"
+					 // +"turkSubmitTo"+GetURLParam("turkSubmitTo"));
+				// postData("https://workersandbox.mturk.com/mturk/externalSubmit",{assignmentId:GetURLParam("assignmentId"),state:"ok"});
+				
+			}
+			
+			//Called on message
+			websocket.onmessage=function(event){
+				//event.data
+			}
+			
+			//Called on close
+			websocket.onclose=function(){
+				
+			}
+			
+			//Auto close connection on exit
+			window.onbeforeunload=function(){
+				websocket.close();
+			}
+			
+			//The code follows may not meet AMT's design
+            changeSource();
+            cancel.click();
+				
         };
         undo.onclick = function() {
             if (image.children.length > 1) {
@@ -296,6 +369,7 @@
     function resize() {
         window.onresize = function() {
             $('.box').remove();
+			changeCountBoxes(-countBoxes.innerHTML);
         };
     }
     resize();
