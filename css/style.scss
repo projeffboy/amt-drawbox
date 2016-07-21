@@ -1,0 +1,265 @@
+/*
+ * Description: The main stylesheet for this project
+ * Author: Jeffery Tang
+ */
+
+/***** Prefixes *****/
+
+@mixin animation($val) {
+    -webkit-animation: $val;
+    animation: $val;
+}
+@mixin filter($val) {
+    -webkit-filter: $val;
+    filter: $val;
+}
+.flexbox {
+    display: -webkit-flex;
+    display: flex;
+}
+@mixin flex-direction($val) {
+    -webkit-flex-direction: $val;
+    flex-direction: $val;
+}
+@mixin justify-content($val) {
+    -webkit-justify-content: $val;
+    justify-content: $val;
+}
+@mixin align-items($val) {
+    -webkit-align-items: $val;
+    align-items: $val;
+}
+@mixin flex-wrap($val) {
+    -webkit-flex-wrap: $val;
+    flex-wrap: $val;
+}
+@mixin flex-flow($val) {
+    -webkit-flex-flow: $val;
+    flex-flow: $val;
+}
+@mixin align-content($val) {
+    -webkit-align-content: $val;
+    align-content: $val;
+}
+@mixin align-self($val) {
+    -webkit-align-self: $val;
+    align-self: $val;
+}
+@mixin transform($val) {
+    -ms-transform: $val;
+    -webkit-transform: $val;
+    transform: $val;
+}
+@mixin user-drag($val) {
+    -ms-user-drag: $val;
+    -moz-user-drag: $val;
+    -webkit-user-drag: $val;
+    user-drag: $val;
+}
+@mixin user-select($val) {
+    -ms-user-select: $val;
+    -moz-user-select: $val;
+    -webkit-user-select: $val;
+    user-select: $val;
+}
+
+/***** Variables *****/
+
+$green: #16a085;
+$invertGreen: #e95f7a;
+$shadowGrey: #aaa;
+$buttonGrey: #e8e8e8;
+$dp05: 0px 0.5px 1px $shadowGrey, 0px 0.5px 1px $shadowGrey;
+$dp1: 0px 1px 2px $shadowGrey, 0px 1px 2px $shadowGrey;
+$dp3: 0px 3px 6px $shadowGrey, 0px 3px 6px $shadowGrey;
+$timeEase: 0.15s ease-out;
+$radius: 5%;
+$border: 1px solid black;
+
+.fullSize {
+    width: 100%;
+    height: 100%;
+}
+
+/***** General Properties *****/
+
+* {
+    box-sizing: border-box;
+}
+html, body {
+    @extend .fullSize;
+    min-height: 530px;
+    min-width: 820px;
+    max-height: 2160px;
+}
+header, main, footer {
+    @extend .flexbox;
+    @include justify-content(center);
+    @include align-items(center);
+    @include flex-direction(column);
+}
+
+/***** Header Properties *****/
+
+header {
+    height: 12.5%;
+    font-size: 1.43rem;
+    text-shadow: $dp05;
+    > h2 {
+        font-weight: 400;
+    }
+}
+
+/***** Main Properties *****/
+
+main {
+    height: 80%;
+}
+#settings {
+    @extend .flexbox;
+    height: 10%;
+    width: 100%;
+    justify-content: center;
+    div, input {
+        float: left;
+    }
+}
+.setting {
+    height: 40px;
+    margin-right: 2%;
+}
+.setting > div, .setting > input, #magnifyIcon, #countBoxes {
+    height: 100%;
+    line-height: 40px;
+    font-size: 1.14rem;
+    background-color: $buttonGrey;
+    box-shadow: $dp1;
+    text-align: center;
+}
+#color {
+    width: 300px;
+    text-transform: capitalize;
+    > div {
+        width: 40%;
+    }
+    > input {
+        width: 10%;
+        border: 0;
+    }
+}
+#borderWidth {
+    width: 150px;
+    > div {
+        width: 50%;
+    }
+}
+#dragClick {
+    width: 250px;
+    > div {
+        width: 50%;
+    }
+}
+#magnifyIcon, #countBoxes {
+    width: 40px;
+    height: 40px;
+    border-radius: 100%;
+    padding: 0;
+}
+#magnifyIcon {
+    background: $buttonGrey url('../magnifier.png') 8px 8px / 24px 24px no-repeat;
+    @include filter(invert(0));
+    transition: $timeEase;
+}
+.magnifyIcon {
+    @include filter(invert(100%) !important);
+    background-color: $invertGreen !important;
+    transition: $timeEase;
+}
+#countBoxes {
+    @extend .flexbox;
+    @include justify-content(center);
+}
+#person, #drag, #onePX {
+    border-top-left-radius: $radius;
+    border-bottom-left-radius: $radius;
+}
+#color2, #clickAndDrag, #twoPX {
+    border-top-right-radius: $radius;
+    border-bottom-right-radius: $radius;
+}
+#person, #black, #twoPX, #drag {
+    background-color: $green;
+    color: white;
+}
+.magnify-lens section {
+    width: 50%;
+    height: 50%;
+    float: left;
+}
+.magnify-lens section:nth-child(1) {
+    border-right: $border;
+    border-bottom: $border;
+}
+.magnify-lens section:nth-child(2) {
+    border-bottom: $border;
+}
+.magnify-lens section:nth-child(3) {
+    border-right: $border;
+}
+#image {
+    height: 80%;
+    img {
+        box-shadow: $dp1;
+        transition: box-shadow $timeEase;
+        @include user-select(none);
+        @include user-drag(none);
+    }
+    img:hover {
+        box-shadow: $dp3;
+        transition: box-shadow $timeEase;
+    }
+    > img {
+        height: 100%;
+    }
+    p {
+        margin-top: -20px;
+    }
+}
+.box {
+    border-style: solid;
+    position: absolute;
+}
+#buttons {
+    @extend .flexbox;
+    height: 10%;
+    width: 100%;
+    @include justify-content(center);
+    @include align-items(center);
+    padding-top: 0.6%;
+    > input {
+        border: 0;
+        background-color: $buttonGrey;
+        height: 40px;
+        border-radius: $radius;
+        padding: 0.5% 1%;
+        margin: 0 1%;
+        text-transform: capitalize;
+        font-size: 1.14rem;
+        box-shadow: $dp1;
+        transition: background-color $timeEase;
+    }
+    > input:hover {
+        background-color: #d5d5d5;
+        transition: background-color $timeEase;
+    }
+    > input:active {
+        background-color: #c2c2c2;
+        transition: background-color $timeEase;
+    }
+}
+
+/***** Footer Properties *****/
+
+footer {
+    height: 7.5%;
+}
