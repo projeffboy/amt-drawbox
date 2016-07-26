@@ -1,4 +1,6 @@
+/* Modules */
 var pug = require('gulp-pug');
+var prettify = require('gulp-prettify');
 var gulp = require('gulp');
 var sass = require('gulp-sass');
 var cleanCSS = require('gulp-clean-css');
@@ -15,25 +17,26 @@ function addMin(path) {
 gulp.task('pug', function() {
     return gulp.src('index.jade')
         .pipe(pug())
+        .pipe(prettify({
+            indent_size: 4
+        }))
         .pipe(gulp.dest('../drawbox'));
 });
 
 /* CSS */
 // Converts SCSS to CSS
-gulp.task('scss', function() {
-    return gulp.src('css/style.scss')
-        .pipe(sass())
+gulp.task('css', function() {
+    gulp.src('css/style.scss')
+        .pipe(sass({
+            outputStyle: 'expanded',
+            indentWidth: 4
+        }))
         .pipe(gulp.dest('css'));
-});
-// Minifies CSS
-gulp.task('cleanCSS', function() {
-    return gulp.src('css/*.css')
+    gulp.src('css/*.css')
         .pipe(cleanCSS())
         .pipe(rename(addMin))
         .pipe(gulp.dest('min-css'));
 });
-// Does all CSS-related tasks
-gulp.task('css', ['scss', 'cleanCSS']);
 
 /* JS */
 // Beautifies JS

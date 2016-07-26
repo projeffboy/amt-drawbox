@@ -1,3 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
 
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><title></title><link rel="stylesheet" type="text/css" href="min-css/normalize.min.css"><link rel="stylesheet" type="text/css" href="min-css/magnify.min.css"><link rel="stylesheet" type="text/css" href="min-css/style.min.css"><script src="min-js/jquery-3.1.0.min.js" defer></script><script src="min-js/jquery.color-2.1.2.min.js" defer></script><script src="js/jquery-easing-1.3.js" defer></script><script src="js/magnify.js" defer></script><script src="js/script.js" defer></script></head><body><header><h2>qgqergqergqergDraw a Box Around Every Person and Vehicle</h2></header><main><div id="settings"><section class="setting" id="color"><div id="person">Person</div><input id="color1" type="color" value="#ffff00"><div id="automobile">Automobile</div><input id="color2" type="color" value="#9900ff"></section><section class="setting" id="borderWidth"><div id="onePX">1px</div><div id="twoPX">2px</div></section><section class="setting" id="dragClick"><div id="drag">Drag</div><div id="clickAndDrag">Click&Drag</div></section><section class="setting" id="magnifyIcon"></section><section class="setting" id="countBoxes">0</section></div><div id="image"><img class="zoom" data-magnify-src="streets.jpg"></div><div id="buttons"><input type="button" id="submit" value="submit"><input type="button" id="undo" value="undo"><input type="button" id="cancel" value="cancel"></div></main><footer><p>Warning: Resizing the browser will cause you to lose all your changes. Use this on a computer, preferrably with CCCChrome.</p></footer></body></html>
+    <head>
+        <meta charset="utf-8">
+        <title></title>
+        <link rel="stylesheet" type="text/css" href="min-css/normalize.min.css">
+        <link rel="stylesheet" type="text/css" href="min-css/magnify.min.css">
+        <link rel="stylesheet" type="text/css" href="min-css/style.min.css">
+        <link rel="stylesheet" type="text/css" href="min-css/jquery-ui.min.css">
+        <script src="min-js/jquery-3.1.0.min.js" defer></script>
+        <!-- dragging and resizing-->
+        <script src="min-js/jquery-ui.min.js" defer></script>
+        <!-- color animations-->
+        <script src="min-js/jquery.color-2.1.2.min.js" defer></script>
+        <!-- ease-out animations-->
+        <script src="js/jquery-easing-1.3.js" defer></script>
+        <!-- magnify images-->
+        <script src="js/magnify.js" defer></script>
+        <script src="js/script.js" defer></script>
+    </head>
 
+    <body>
+        <header>
+            <h2>Draw a Box Around Every Person and Vehicle</h2></header>
+        <main>
+            <div id="settings">
+                <section class="setting" id="color">
+                    <div id="person">Person</div><input id="color1" type="color" value="#ffff00">
+                    <div id="automobile">Automobile</div><input id="color2" type="color" value="#9900ff"></section>
+                <section class="setting" id="borderWidth">
+                    <div id="onePX">1px</div>
+                    <div id="twoPX">2px</div>
+                </section>
+                <section class="setting" id="dragClick">
+                    <div id="drag">Drag</div>
+                    <div id="clickAndDrag">Click&Drag</div>
+                </section>
+                <section class="setting" id="magnifyIcon"></section>
+                <section class="setting" id="countBoxes">0</section>
+            </div>
+            <div id="image"><img class="zoom" data-magnify-src="streets.jpg"></div>
+            <div id="buttons"><input type="button" id="submit" value="submit"><input type="button" id="undo" value="undo"><input type="button" id="cancel" value="cancel"></div>
+        </main>
+        <footer>
+            <p>Warning: Resizing the browser will cause you to lose all your changes. Use this on a computer, preferrably with Chrome.</p>
+        </footer>
+    </body>
+
+</html>

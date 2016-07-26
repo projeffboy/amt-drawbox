@@ -214,20 +214,21 @@ main {
         @include user-select(none);
         @include user-drag(none);
     }
-    img:hover {
-        box-shadow: $dp3;
-        transition: box-shadow $timeEase;
-    }
     > img {
         height: 100%;
     }
     p {
-        margin-top: -20px;
+        margin-top: -16px;
+        font-size: 0.75rem;
     }
 }
-.box {
+#image > .box {
     border-style: solid;
     position: absolute;
+    cursor: pointer;
+}
+#image > .box:active {
+    cursor: move;
 }
 #buttons {
     @extend .flexbox;

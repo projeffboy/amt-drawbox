@@ -2,7 +2,7 @@
     'use strict';
 
     /*
-     * Variables that are not in the global namespace
+     * Global Variables
      */
 
     var i;
@@ -19,6 +19,9 @@
         imgVal: ''
     };
 
+    /*
+     * Global, short, usable functions
+     */
     function checkCSS(elem, prop, val) {
         /*
          * elem: The DOM element to check CSS
@@ -41,7 +44,6 @@
     }
 
     function destroy() {
-
         $(magnifyIcon).removeClass('magnifyIcon');
         $('.magnify').remove();
         $(image).prepend('<img class="zoom" src="' + g.imgVal + '" data-magnify-src="' + g.imgVal + '">');
@@ -54,6 +56,13 @@
         $('.zoom').attr('data-magnify-src', g.imgVal);
     }
     changeSource();
+
+    function removeBoxes() {
+        if (image.children.length > 1) {
+            $('.box').remove();
+        }
+        changeCountBoxes(-countBoxes.innerHTML);
+    }
 
     /*
      * Change the background-color and color of toggles
@@ -163,28 +172,37 @@
                 }
             }
         }
-
         if (g.divBox === null) {
-            g.mouse.startX = g.mouse.x;
-            g.mouse.startY = g.mouse.y;
-            g.divBox = document.createElement('div');
-            g.divBox.className = 'box';
-            checkAndChange(color, 'color', false);
-            checkAndChange(color, 'borderColor', false);
-            checkAndChange(borderWidth, 'borderWidth', true);
-            g.divBox.style.left = g.mouse.x + 'px';
-            g.divBox.style.top = g.mouse.y + 'px';
-            image.appendChild(g.divBox);
-            image.style.cursor = 'crosshair';
-            if (checkCSS(drag)) {
-                image.addEventListener('mouseup', startMouse);
+            if (event.target.tagName !== 'P' && event.target.tagName !== 'DIV') {
+                g.mouse.startX = g.mouse.x;
+                g.mouse.startY = g.mouse.y;
+                g.divBox = document.createElement('div');
+                g.divBox.className = 'box';
+                checkAndChange(color, 'color', false);
+                checkAndChange(color, 'borderColor', false);
+                checkAndChange(borderWidth, 'borderWidth', true);
+                g.divBox.style.left = g.mouse.x + 'px';
+                g.divBox.style.top = g.mouse.y + 'px';
+                image.appendChild(g.divBox);
+                image.style.cursor = 'crosshair';
+                if (checkCSS(drag)) {
+                    image.addEventListener('mouseup', startMouse);
+                } else {
+                    image.removeEventListener('mouseup', startMouse);
+                }
             } else {
                 image.removeEventListener('mouseup', startMouse);
             }
         } else {
-            if (Math.abs(g.mouse.x - g.mouse.startX) < 5 || Math.abs(g.mouse.y - g.mouse.startY) < 5) {
+            if (Math.abs(g.mouse.x - g.mouse.startX) < 10 || Math.abs(g.mouse.y - g.mouse.startY) < 10) {
                 $(g.divBox).remove();
             } else {
+                $('.box').draggable({
+                    containment: 'parent'
+                });
+                $('.box').resizable({
+                    containment: 'parent'
+                });
                 var annotation;
                 if (checkCSS(person)) {
                     annotation = 'Person';
@@ -281,12 +299,7 @@
             }
             changeCountBoxes(-1);
         };
-        cancel.onclick = function() {
-            if (image.children.length > 1) {
-                $('.box').remove();
-            }
-            changeCountBoxes(-countBoxes.innerHTML);
-        };
+        cancel.onclick = removeBoxes;
     }
     btnFunc();
 
@@ -294,9 +307,7 @@
      * Delete all boxes when the browser window is resized
      */
     function resize() {
-        window.onresize = function() {
-            $('.box').remove();
-        };
+        window.addEventListener('resize', removeBoxes);
     }
     resize();
 })();
