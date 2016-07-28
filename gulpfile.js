@@ -26,12 +26,14 @@ gulp.task('pug', function() {
 /* CSS */
 // Converts SCSS to CSS
 gulp.task('css', function() {
+    // Converts SCSS to CSS
     gulp.src('css/style.scss')
         .pipe(sass({
             outputStyle: 'expanded',
             indentWidth: 4
         }))
         .pipe(gulp.dest('css'));
+    // Minifies CSS
     gulp.src('css/*.css')
         .pipe(cleanCSS())
         .pipe(rename(addMin))
@@ -39,24 +41,20 @@ gulp.task('css', function() {
 });
 
 /* JS */
-// Beautifies JS
-gulp.task('beautify', function() {
+gulp.task('js', function() {
+    // Beautifies JS
     gulp.src('js/*.js')
         .pipe(beautify())
         .pipe(gulp.dest('js'));
     gulp.src('gulpfile.js')
         .pipe(beautify())
         .pipe(gulp.dest('../drawbox'));
-});
-// Minifies JS
-gulp.task('uglify', function() {
+    // Minifies JS
     gulp.src('js/*.js')
         .pipe(uglify())
         .pipe(rename(addMin))
         .pipe(gulp.dest('min-js'));
 });
-// Does all JS-related tasks
-gulp.task('js', ['beautify', 'uglify']);
 
 /* General */
 // Does all tasks

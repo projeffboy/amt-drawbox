@@ -89,7 +89,7 @@ $border: 1px solid black;
 html, body {
     @extend .fullSize;
     min-height: 530px;
-    min-width: 820px;
+    min-width: 800px;
     max-height: 2160px;
 }
 header, main, footer {
@@ -208,11 +208,12 @@ main {
 }
 #image {
     height: 80%;
+    position: relative;
     img {
-        box-shadow: $dp1;
-        transition: box-shadow $timeEase;
         @include user-select(none);
         @include user-drag(none);
+        box-shadow: $dp1;
+        transition: box-shadow $timeEase;
     }
     > img {
         height: 100%;

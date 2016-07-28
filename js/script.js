@@ -16,7 +16,8 @@
         },
         divBox: null,
         numImg: 24,
-        imgVal: ''
+        imgVal: '',
+        boolean: true
     };
 
     /*
@@ -57,8 +58,16 @@
     }
     changeSource();
 
-    function removeBoxes() {
+    function checkBoxes() {
         if (image.children.length > 1) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    function removeBoxes() {
+        if (checkBoxes()) {
             $('.box').remove();
         }
         changeCountBoxes(-countBoxes.innerHTML);
@@ -225,21 +234,23 @@
     function initDraw() {
         function setMousePos(e) {
             var ev = e || window.event; //Moz || IE
+            var imgLeft = image.getBoundingClientRect().left;
+            var imgTop = image.getBoundingClientRect().top;
             if (ev.pageX) { //Moz
-                g.mouse.x = ev.pageX + window.pageXOffset;
-                g.mouse.y = ev.pageY + window.pageYOffset;
+                g.mouse.x = ev.pageX + window.pageXOffset - imgLeft;
+                g.mouse.y = ev.pageY + window.pageYOffset - imgTop;
             } else if (ev.clientX) { //IE
-                g.mouse.x = ev.clientX + document.body.scrollLeft;
-                g.mouse.y = ev.clientY + document.body.scrollTop;
+                g.mouse.x = ev.clientX + document.body.scrollLeft - imgleft;
+                g.mouse.y = ev.clientY + document.body.scrollTop - imgTop;
             }
         }
         image.onmousemove = function() {
             setMousePos(event);
             if (g.divBox !== null) {
-                g.divBox.style.width = Math.abs(g.mouse.x - g.mouse.startX) + 'px';
-                g.divBox.style.height = Math.abs(g.mouse.y - g.mouse.startY) + 'px';
-                g.divBox.style.left = (g.mouse.x - g.mouse.startX < 0) ? g.mouse.x + 'px' : g.mouse.startX + 'px';
-                g.divBox.style.top = (g.mouse.y - g.mouse.startY < 0) ? g.mouse.y + 'px' : g.mouse.startY + 'px';
+                g.divBox.style.width = Math.abs(g.mouse.x - g.mouse.startX) / image.offsetWidth * 100 + '%';
+                g.divBox.style.height = Math.abs(g.mouse.y - g.mouse.startY) / image.offsetHeight * 100 + '%';
+                g.divBox.style.left = (g.mouse.x - g.mouse.startX < 0) ? g.mouse.x / image.offsetWidth * 100 + '%' : g.mouse.startX / image.offsetWidth * 100 + '%';
+                g.divBox.style.top = (g.mouse.y - g.mouse.startY < 0) ? g.mouse.y / image.offsetHeight * 100 + '%' : g.mouse.startY / image.offsetHeight * 100 + '%';
             }
         };
         image.addEventListener('mousedown', startMouse);
@@ -261,12 +272,13 @@
     function btnFunc() {
         submit.onclick = function() {
             function convert(val, prop) {
-                if ((val + '').match(/px/)) {
-                    val = +(val.slice(0, val.length - 2));
-                }
+                /*
+                 * val: The CSS value of the `prop` parameter below
+                 * prop: The CSS property (width or height)
+                 */
                 return Math.round(val * tempImg[prop] / image.children[0][prop]);
             }
-            if (image.children.length > 1) {
+            if (checkBoxes()) {
                 if ($(magnifyIcon).hasClass('magnifyIcon') === true) {
                     destroy();
                 }
@@ -284,8 +296,8 @@
                     var y = Math.abs(boxRect.top - imageRect.top);
                     console.log(
                         'Box ' + i + ' Dimensions\n' +
-                        'Width: ' + convert(image.children[i].style.width, 'width') + '\n' +
-                        'Height: ' + convert(image.children[i].style.height, 'height') + '\n' +
+                        'Width: ' + convert(image.children[i].offsetWidth, 'width') + '\n' +
+                        'Height: ' + convert(image.children[i].offsetHeight, 'height') + '\n' +
                         'Relative Position: (' + convert(x, 'width') + 'px, ' + convert(y, 'height') + 'px)'
                     );
                 }
@@ -294,7 +306,7 @@
             }
         };
         undo.onclick = function() {
-            if (image.children.length > 1) {
+            if (checkBoxes()) {
                 image.removeChild(image.children[image.children.length - 1]);
             }
             changeCountBoxes(-1);
@@ -307,7 +319,31 @@
      * Delete all boxes when the browser window is resized
      */
     function resize() {
-        window.addEventListener('resize', removeBoxes);
+        window.onload = function() {
+            g.imagePos = image.getBoundingClientRect();
+        };
+
+        function adjust() {
+            if (g.bool) {
+                image.style.margin = '0 auto';
+            } else {
+                image.style.margin = 'auto';
+            }
+            g.bool = !g.bool;
+            /*
+            if (checkBoxes()) {
+                for (i = 1, length = image.children.length; i < length; i++) {
+                    //console.log(image.children[i].style.left.match(/\d+/)[0]);
+                    //console.log(image.getBoundingClientRect().left - g.imagePos.left);
+                    //console.log(image.getBoundingClientRect().left);
+                    //console.log(g.imagePos);
+                    image.children[i].style.left = +image.children[i].style.left.match(/\d+/)[0] + (image.getBoundingClientRect().left - g.imagePos.left) / 1.25 + 'px';
+                }
+                g.imagePos = image.getBoundingClientRect();
+            }
+            */
+        }
+        window.addEventListener('resize', adjust);
     }
     resize();
 })();
