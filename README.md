@@ -10,7 +10,7 @@ Drawbox is best used in conjunction with [Amazon Mechanical Turk][1], where you 
 2. Replace the sample pictures in the "pictures" folder with the ones you need.
 3. Make any necessary changes to the code (optional).
 4. Hook this repository up with a server and some sever-side code.
-5. Set it up on Amazon Mechanical Turk (optional).
+5. Set it up on [Amazon Mechanical Turk][1] (optional).
 
 ###Jade and SCSS Files
 This application was created using Jade and SCSS files preprocessed into HTML and CSS, respectively. If Jade and SCSS are not your thing, you can ignore those files and stick to the regular HTML and CSS files.
