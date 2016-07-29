@@ -73,6 +73,12 @@
         changeCountBoxes(-countBoxes.innerHTML);
     }
 
+    function addPX() {
+        if ($('.box').css('border-width') === '2px') {
+            $('.box').css('border-width', '2.25px');
+        }
+    }
+
     /*
      * Change the background-color and color of toggles
      * #black and #white affect the color of the drawed boxes
@@ -135,6 +141,7 @@
         twoPX.onclick = function() {
             toggleColors(this);
             setProp('border-width', this.innerHTML);
+            addPX();
         };
         drag.onclick = function() {
             toggleColors(this);
@@ -175,7 +182,8 @@
                 if (checkCSS(elem.children[i])) {
                     if (bool) {
                         g.divBox.style[prop] = elem.children[i].innerHTML;
-                    } else if (true && i !== length - 1) {
+                        addPX();
+                    } else if (i !== length - 1) {
                         g.divBox.style[prop] = elem.children[i].nextSibling.value;
                     }
                 }
@@ -305,6 +313,7 @@
                     var y = Math.abs(boxRect.top - imageRect.top);
                     console.log(
                         'Box ' + i + ' Dimensions\n' +
+                        'Type: ' + image.children[i].children[0].innerHTML + '\n' + 
                         'Width: ' + convert(image.children[i].offsetWidth, 'width') + '\n' +
                         'Height: ' + convert(image.children[i].offsetHeight, 'height') + '\n' +
                         'Relative Position: (' + convert(x, 'width') + 'px, ' + convert(y, 'height') + 'px)'
