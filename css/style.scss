@@ -91,6 +91,7 @@ html, body {
     min-height: 530px;
     min-width: 800px;
     max-height: 2160px;
+    font-family: 'Helvetica', 'Arial', sans-serif;
 }
 header, main, footer {
     @extend .flexbox;

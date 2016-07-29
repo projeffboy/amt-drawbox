@@ -1,9 +1,9 @@
 #AMT Drawbox
 
 ###Introduction
-*Drawbox* is a front-end UI application for drawing boxes on images. It also logs the dimensions and coordinates of the boxes, which can be reconfigured with server-side code to store such information on a database.
+**Drawbox** is a front-end UI application for drawing boxes on images. It also logs the dimensions and coordinates of the boxes, which can be reconfigured with server-side code to store such information on a database.
 
-Drawbox is best used in conjunction with [Amazon Mechanical Turk][1], where you can pay workers to manually draw and submit the boxes for you. There are more details in the "Getting Started" section below.
+**Drawbox** is best used in conjunction with [Amazon Mechanical Turk][1], where you can pay workers to manually draw and submit the boxes for you. There are more details in the "Getting Started" section below.
 
 ###Getting Started
 1. Download this repository. Open up index.html to test if it works.
@@ -16,7 +16,7 @@ Drawbox is best used in conjunction with [Amazon Mechanical Turk][1], where you 
 This application was created using Jade and SCSS files preprocessed into HTML and CSS, respectively. If Jade and SCSS are not your thing, you can ignore those files and stick to the regular HTML and CSS files.
 
 ###Browser Compatibility
-*Drawbox* is compatible with the latest versions of Firefox, Chrome, and Opera. However, it uses the [color input type][2], which is not supported in most other browsers, most notably Safari <9 and Edge <13. It hasn't been tested in Internet Explorer, which may have limited functionality.
+**Drawbox** is compatible with the latest versions of Firefox, Chrome, and Opera. However, it uses the [color input type][2], which is not supported in most other browsers, most notably Safari <9 and Edge <13. It hasn't been tested in Internet Explorer, which may have limited functionality.
 
 The application is not meant to be used on touchscreen devices, so the site has not been tested on mobile devices yet. If mobile visitors is important for you, you can include mobile support yourself.
 
