@@ -164,7 +164,7 @@
      * Start/End the drawing box process
      */
 
-    function startMouse() {
+    function startMouse(event) {
         function checkAndChange(elem, prop, bool) {
             /*
              * elem: parent element containing the children elements to check and set CSS value
@@ -232,19 +232,28 @@
      */
 
     function initDraw() {
+        image.ondragstart = function(event) {
+            var $box = $('.box');
+            for (i = 0; i < $box.length; i++) {
+                if ($box[i] === event.target) {
+                    return true;
+                }
+            }
+            return false;
+        };
+
         function setMousePos(e) {
-            var ev = e || window.event; //Moz || IE
             var imgLeft = image.getBoundingClientRect().left;
             var imgTop = image.getBoundingClientRect().top;
-            if (ev.pageX) { //Moz
-                g.mouse.x = ev.pageX + window.pageXOffset - imgLeft;
-                g.mouse.y = ev.pageY + window.pageYOffset - imgTop;
+            if (e.pageX) { //Moz
+                g.mouse.x = e.pageX + window.pageXOffset - imgLeft;
+                g.mouse.y = e.pageY + window.pageYOffset - imgTop;
             } else if (ev.clientX) { //IE
-                g.mouse.x = ev.clientX + document.body.scrollLeft - imgleft;
-                g.mouse.y = ev.clientY + document.body.scrollTop - imgTop;
+                g.mouse.x = e.clientX + document.body.scrollLeft - imgleft;
+                g.mouse.y = e.clientY + document.body.scrollTop - imgTop;
             }
         }
-        image.onmousemove = function() {
+        image.onmousemove = function(event) {
             setMousePos(event);
             if (g.divBox !== null) {
                 g.divBox.style.width = Math.abs(g.mouse.x - g.mouse.startX) / image.offsetWidth * 100 + '%';
@@ -279,7 +288,7 @@
                 return Math.round(val * tempImg[prop] / image.children[0][prop]);
             }
             if (checkBoxes()) {
-                if ($(magnifyIcon).hasClass('magnifyIcon') === true) {
+                if ($(magnifyIcon).hasClass('magnifyIcon')) {
                     destroy();
                 }
                 var tempImg = new Image();
@@ -324,24 +333,15 @@
         };
 
         function adjust() {
+            if ($(magnifyIcon).hasClass('magnifyIcon') && checkBoxes()) {
+                magnifyIcon.click();
+            }
             if (g.bool) {
                 image.style.margin = '0 auto';
             } else {
                 image.style.margin = 'auto';
             }
             g.bool = !g.bool;
-            /*
-            if (checkBoxes()) {
-                for (i = 1, length = image.children.length; i < length; i++) {
-                    //console.log(image.children[i].style.left.match(/\d+/)[0]);
-                    //console.log(image.getBoundingClientRect().left - g.imagePos.left);
-                    //console.log(image.getBoundingClientRect().left);
-                    //console.log(g.imagePos);
-                    image.children[i].style.left = +image.children[i].style.left.match(/\d+/)[0] + (image.getBoundingClientRect().left - g.imagePos.left) / 1.25 + 'px';
-                }
-                g.imagePos = image.getBoundingClientRect();
-            }
-            */
         }
         window.addEventListener('resize', adjust);
     }

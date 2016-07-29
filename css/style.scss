@@ -145,6 +145,8 @@ main {
     > input {
         width: 10%;
         border: 0;
+        color:#e8e8e8;
+        padding: 0 1%;
     }
 }
 #borderWidth {
@@ -211,7 +213,6 @@ main {
     position: relative;
     img {
         @include user-select(none);
-        @include user-drag(none);
         box-shadow: $dp1;
         transition: box-shadow $timeEase;
     }
@@ -222,14 +223,14 @@ main {
         margin-top: -16px;
         font-size: 0.75rem;
     }
-}
-#image > .box {
-    border-style: solid;
-    position: absolute;
-    cursor: pointer;
-}
-#image > .box:active {
-    cursor: move;
+    > .box {
+        border-style: solid;
+        position: absolute;
+        cursor: pointer;
+    }
+    > .box:active {
+        cursor: move;
+    }
 }
 #buttons {
     @extend .flexbox;
