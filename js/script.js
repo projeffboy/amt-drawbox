@@ -12,7 +12,13 @@
             x: 0,
             y: 0,
             startX: 0,
-            startY: 0
+            startY: 0,
+            xDiff: function() {
+                return g.mouse.x - g.mouse.startX;
+            },
+            yDiff: function() {
+                return g.mouse.y - g.mouse.startY;
+            }
         },
         divBox: null,
         numImg: 24,
@@ -211,7 +217,7 @@
                 image.removeEventListener('mouseup', startMouse);
             }
         } else {
-            if (Math.abs(g.mouse.x - g.mouse.startX) < 10 || Math.abs(g.mouse.y - g.mouse.startY) < 10) {
+            if (Math.abs(g.mouse.xDiff()) < 10 || Math.abs(g.mouse.yDiff()) < 10) {
                 $(g.divBox).remove();
             } else {
                 $('.box').draggable({
@@ -253,21 +259,23 @@
         function setMousePos(e) {
             var imgLeft = image.getBoundingClientRect().left;
             var imgTop = image.getBoundingClientRect().top;
-            if (e.pageX) { //Moz
-                g.mouse.x = e.pageX + window.pageXOffset - imgLeft;
-                g.mouse.y = e.pageY + window.pageYOffset - imgTop;
-            } else if (ev.clientX) { //IE
-                g.mouse.x = e.clientX + document.body.scrollLeft - imgleft;
-                g.mouse.y = e.clientY + document.body.scrollTop - imgTop;
-            }
+            g.mouse.x = e.pageX + window.pageXOffset - imgLeft - $(window).scrollLeft() * 2;
+            g.mouse.y = e.pageY + window.pageYOffset - imgTop - $(window).scrollTop() * 2;
         }
+        // $(window).scrollLeft()
         image.onmousemove = function(event) {
             setMousePos(event);
+            function toPercent(val) {
+                return val * 100 + '%';
+            }
             if (g.divBox !== null) {
-                g.divBox.style.width = Math.abs(g.mouse.x - g.mouse.startX) / image.offsetWidth * 100 + '%';
-                g.divBox.style.height = Math.abs(g.mouse.y - g.mouse.startY) / image.offsetHeight * 100 + '%';
-                g.divBox.style.left = (g.mouse.x - g.mouse.startX < 0) ? g.mouse.x / image.offsetWidth * 100 + '%' : g.mouse.startX / image.offsetWidth * 100 + '%';
-                g.divBox.style.top = (g.mouse.y - g.mouse.startY < 0) ? g.mouse.y / image.offsetHeight * 100 + '%' : g.mouse.startY / image.offsetHeight * 100 + '%';
+                var left, top;
+                g.divBox.style.width = Math.abs(g.mouse.xDiff()) / image.offsetWidth * 100 + '%';
+                g.divBox.style.height = Math.abs(g.mouse.yDiff()) / image.offsetHeight * 100 + '%';
+                left = g.mouse.xDiff() > 0 ? g.mouse.startX : g.mouse.x;
+                g.divBox.style.left = toPercent(left / image.offsetWidth);
+                top = g.mouse.yDiff() > 0 ? g.mouse.startY : g.mouse.y;
+                g.divBox.style.top = toPercent(top / image.offsetHeight);
             }
         };
         image.addEventListener('mousedown', startMouse);
@@ -313,7 +321,7 @@
                     var y = Math.abs(boxRect.top - imageRect.top);
                     console.log(
                         'Box ' + i + ' Dimensions\n' +
-                        'Type: ' + image.children[i].children[0].innerHTML + '\n' + 
+                        'Type: ' + image.children[i].children[0].innerHTML + '\n' +
                         'Width: ' + convert(image.children[i].offsetWidth, 'width') + '\n' +
                         'Height: ' + convert(image.children[i].offsetHeight, 'height') + '\n' +
                         'Relative Position: (' + convert(x, 'width') + 'px, ' + convert(y, 'height') + 'px)'
